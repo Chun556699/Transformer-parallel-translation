@@ -54,12 +54,12 @@
 
 ## ✨ 核心特性
 
-### 1. 🔄 中英双向翻译
+### 1. 🔄 中英双向翻译 -- 多语言可以自定义添加其他国家语言
 - 支持 **中文→英文** 和 **英文→中文** 两个方向
 - 基于 Helsinki-NLP 多语言预训练模型微调
 - 动态长度分桶（Bucket Batching）提高训练效率
 
-### 2. 📊 高质量数据筛选
+### 2. 📊 高质量数据筛选 --这里根据你的需求进行选择，我只用了30万
 - 从 **520 万** 平行语料中精选 **30 万** 高质量样本
 - 使用 **LaBSE (Language-agnostic BERT Sentence Embedding)** 计算语义相似度
 - 质量阈值 ≥ **0.75**，确保数据纯净度
@@ -78,7 +78,7 @@ stats = sample_translation_dataset(
 )
 ```
 
-### 3. 🏆 WMT18 冠军策略
+### 3. 🏆 优化策略
 - **Label Smoothing** (0.1) — 防止过拟合，提升泛化能力
 - **Noam 学习率调度** — Transformer 原版调度器，Warmup 4000 步
 - **梯度累积** — 等效 batch_size = 256，稳定训练
@@ -185,7 +185,7 @@ transformer-nmt-zh-en/
 │   │
 │   ├── 📂 training/                  # 训练模块
 │   │   ├── 📜 trainer.py             # 训练器（Transformer Trainer）
-│   │   └── 📜 wmt18_strategies.py    # WMT18 冠军策略实现
+│   │   └── 📜 wmt18_strategies.py    # 优化策略
 │   │
 │   ├── 📂 compression/               # 模型压缩
 │   │   ├── 📜 pruning.py             # 结构化剪枝

@@ -1,0 +1,50 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+*.egg
+.eggs/
+
+# Virtual environment
+venv/
+.venv/
+env/
+
+# Model files (large, download on demand)
+models/
+*.bin
+*.msgpack
+*.safetensors
+*.ot
+
+# Data files (large, download on demand)
+data-zip/
+mydata/translation2019zh/*.json
+
+# Outputs
+outputs/
+logs/
+
+# Node
+node_modules/
+web/frontend/node_modules/
+web/frontend/dist/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Environment
+.env
+*.env.local

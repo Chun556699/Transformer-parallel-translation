@@ -1,0 +1,458 @@
+/**
+ * NMT翻译系统 - 专业暗色主题
+ * 
+ * 设计理念：
+ *   - 科技感深色背景
+ *   - 渐变高亮效果
+ *   - 专业级UI布局
+ */
+
+/* Tailwind CSS 指令 */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================================
+   CSS 变量定义 (白底清爽主题)
+   ============================================================================ */
+:root {
+  /* 主色调 */
+  --primary: hsl(245, 82%, 60%);
+  --primary-hover: hsl(245, 82%, 50%);
+  --primary-glow: hsla(245, 82%, 60%, 0.2);
+  
+  /* 辅助色 */
+  --accent-blue: hsl(217, 91%, 60%);
+  --accent-cyan: hsl(190, 90%, 40%);
+  --accent-purple: hsl(270, 85%, 60%);
+  --accent-green: hsl(160, 84%, 39%);
+  
+  /* 背景色 - 白底 */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8fafc;
+  --bg-tertiary: #f1f5f9;
+  --bg-card: rgba(255, 255, 255, 0.8);
+  --bg-elevated: #e2e8f0;
+  
+  /* 玻璃拟态 */
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(0, 0, 0, 0.05);
+  
+  /* 文字色 */
+  --text-primary: #1e293b;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+  
+  /* 边框色 */
+  --border-color: #e2e8f0;
+  --border-glow: rgba(99, 102, 241, 0.2);
+}
+
+/* 全局字体优化 */
+body {
+  @apply antialiased text-slate-800;
+  font-family: 'Inter', 'Outfit', 'Source Han Sans SC', sans-serif;
+  background: var(--bg-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* 动态流体背景 - 浅色 */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(circle at 0% 0%, hsla(245, 80%, 90%, 0.4) 0%, transparent 40%),
+    radial-gradient(circle at 100% 100%, hsla(270, 80%, 90%, 0.4) 0%, transparent 40%),
+    radial-gradient(circle at 50% 50%, hsla(190, 80%, 90%, 0.4) 0%, transparent 60%);
+  z-index: -1;
+  filter: blur(80px);
+}
+
+/* 组件样式提升 */
+@layer components {
+  .premium-card {
+    @apply rounded-2xl transition-all duration-500 overflow-hidden;
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+  }
+  
+  .premium-card:hover {
+    border-color: rgba(99, 102, 241, 0.3);
+    box-shadow: 0 15px 40px -10px rgba(0, 0, 0, 0.7), 0 0 20px rgba(99, 102, 241, 0.1);
+  }
+
+  .btn-premium {
+    @apply px-8 py-3 font-semibold rounded-xl transition-all duration-300 relative overflow-hidden;
+    background: linear-gradient(135deg, var(--primary), var(--accent-purple));
+    color: white;
+    box-shadow: 0 4px 15px var(--primary-glow);
+  }
+
+  .btn-premium::after {
+    content: '';
+    @apply absolute inset-0 opacity-0 transition-opacity duration-300;
+    background: linear-gradient(rgba(255,255,255,0.2), transparent);
+  }
+
+  .btn-premium:hover {
+    @apply -translate-y-0.5;
+    box-shadow: 0 8px 25px var(--primary-glow);
+  }
+
+  .btn-premium:hover::after {
+    @apply opacity-100;
+  }
+
+  .textarea-premium {
+    @apply w-full h-64 p-6 bg-transparent rounded-xl border-none resize-none transition-all duration-300;
+    color: var(--text-primary);
+    line-height: 1.8;
+    font-size: 1.1rem;
+  }
+
+  .textarea-premium:focus {
+    @apply outline-none ring-0;
+  }
+
+  .result-panel {
+    @apply w-full h-64 p-6 rounded-xl overflow-auto transition-all duration-500;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+  }
+
+  .glass-tag {
+    @apply px-3 py-1 rounded-full text-xs font-semibold tracking-wider uppercase;
+    background: rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    backdrop-filter: blur(5px);
+  }
+}
+
+
+/* 滚动条样式 */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* ============================================================================
+   组件样式
+   ============================================================================ */
+@layer components {
+  /* 主按钮 */
+  .btn-primary {
+    @apply px-6 py-2.5 font-medium rounded-lg transition-all duration-200;
+    background: linear-gradient(135deg, var(--primary), var(--accent-purple));
+    color: white;
+    box-shadow: 0 4px 15px var(--primary-glow);
+  }
+  
+  .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px var(--primary-glow);
+  }
+  
+  .btn-primary:active {
+    transform: translateY(0);
+  }
+  
+  .btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+  
+  /* 次要按钮 */
+  .btn-secondary {
+    @apply px-4 py-2 font-medium rounded-lg transition-all duration-200;
+    background: var(--bg-elevated);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+  }
+  
+  .btn-secondary:hover {
+    background: var(--bg-card);
+    color: var(--text-primary);
+    border-color: var(--primary);
+  }
+  
+  /* 图标按钮 */
+  .btn-icon {
+    @apply p-2 rounded-lg transition-all duration-200;
+    color: var(--text-muted);
+  }
+  
+  .btn-icon:hover {
+    background: var(--bg-elevated);
+    color: var(--text-primary);
+  }
+  
+  /* 危险按钮 */
+  .btn-danger {
+    @apply px-4 py-2 font-medium rounded-lg transition-all duration-200;
+    background: rgba(239, 68, 68, 0.2);
+    color: var(--error);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+  }
+  
+  .btn-danger:hover {
+    background: rgba(239, 68, 68, 0.3);
+  }
+  
+  /* 卡片容器 */
+  .card {
+    @apply rounded-xl transition-all duration-200;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+  }
+  
+  .card:hover {
+    border-color: var(--border-glow);
+  }
+  
+  /* 输入框 */
+  .input-field {
+    @apply w-full px-4 py-3 rounded-lg transition-all duration-200;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+  }
+  
+  .input-field:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-glow);
+  }
+  
+  .input-field::placeholder {
+    color: var(--text-muted);
+  }
+  
+  /* 翻译文本框 */
+  .translation-textarea {
+    @apply w-full h-52 p-4 text-base rounded-xl resize-none transition-all duration-200;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    line-height: 1.8;
+  }
+  
+  .translation-textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-glow);
+  }
+  
+  .translation-textarea::placeholder {
+    color: var(--text-muted);
+  }
+  
+  /* 翻译结果区域 */
+  .translation-result {
+    @apply w-full h-52 p-4 text-base rounded-xl overflow-auto;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    line-height: 1.8;
+  }
+  
+  /* 标签样式 */
+  .tag {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-sm font-medium;
+    background: var(--bg-elevated);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+  }
+  
+  .tag-primary {
+    background: rgba(99, 102, 241, 0.2);
+    color: var(--primary-hover);
+    border-color: rgba(99, 102, 241, 0.3);
+  }
+  
+  .tag-success {
+    background: rgba(16, 185, 129, 0.2);
+    color: var(--success);
+    border-color: rgba(16, 185, 129, 0.3);
+  }
+  
+  /* 分隔线 */
+  .divider {
+    @apply w-full h-px;
+    background: linear-gradient(90deg, transparent, var(--border-color), transparent);
+  }
+  
+  /* 状态指示器 */
+  .status-dot {
+    @apply w-2 h-2 rounded-full;
+  }
+  
+  .status-online {
+    background: var(--success);
+    box-shadow: 0 0 8px var(--success);
+  }
+  
+  .status-offline {
+    background: var(--error);
+    box-shadow: 0 0 8px var(--error);
+  }
+  
+  .status-checking {
+    background: var(--warning);
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+  
+  /* 模态框背景 */
+  .modal-overlay {
+    @apply fixed inset-0 flex items-center justify-center z-50;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+  }
+  
+  /* 流式输出动画 */
+  .streaming-cursor {
+    @apply inline-block w-0.5 h-5 ml-0.5;
+    background: var(--primary);
+    animation: blink 0.8s ease-in-out infinite;
+  }
+}
+
+/* ============================================================================
+   动画效果
+   ============================================================================ */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 5px var(--primary-glow);
+  }
+  50% {
+    box-shadow: 0 0 20px var(--primary-glow), 0 0 30px var(--primary-glow);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.animate-slide-in {
+  animation: slideIn 0.3s ease-out;
+}
+
+.animate-glow {
+  animation: glow 2s ease-in-out infinite;
+}
+
+/* 流式文本动画 */
+.streaming-text {
+  animation: fadeIn 0.1s ease-out;
+}
+
+/* ============================================================================
+   响应式适配
+   ============================================================================ */
+@media (max-width: 768px) {
+  .translation-textarea,
+  .translation-result {
+    @apply h-40 text-sm;
+  }
+  
+  .btn-primary {
+    @apply px-4 py-2 text-sm;
+  }
+}
+
+/* ============================================================================
+   特殊效果
+   ============================================================================ */
+/* 渐变边框 */
+.gradient-border {
+  position: relative;
+}
+
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, var(--primary), var(--accent-cyan), var(--accent-purple));
+  -webkit-mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+/* 玻璃效果 */
+.glass-effect {
+  background: rgba(30, 30, 50, 0.8);
+  backdrop-filter: blur(10px);
+}
+
+/* 霓虹文字 */
+.neon-text {
+  text-shadow: 
+    0 0 5px currentColor,
+    0 0 10px currentColor,
+    0 0 20px currentColor;
+}

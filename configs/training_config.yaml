@@ -1,0 +1,199 @@
+# ====================================
+# NMT 训练配置文件 (WMT18冠军策略)
+# ====================================
+
+# 模型配置
+model:
+  # 中文→英文模型路径
+  zh_en_model_path: "models/Helsinki-NLP-opus-mt-zh-en"
+  # 英文→中文模型路径
+  en_zh_model_path: "models/Helsinki-NLP-opus-mt-en-zh"
+  # 最大序列长度
+  max_length: 512
+  # 混合精度类型（bf16 适合 RTX 4090）
+  dtype: "bf16"
+
+# ====================================
+# WMT18冠军策略配置
+# ====================================
+
+# Label Smoothing（WMT18核心策略） 
+label_smoothing:
+  enabled: true
+  smoothing: 0.1  # WMT18推荐值
+
+# Noam学习率调度器（Transformer原版）
+noam_scheduler:
+  enabled: true
+  d_model: 512  # 模型维度
+  warmup_steps: 4000  # WMT18推荐
+  factor: 1.0
+
+# 大批次训练（WMT18策略）
+large_batch_training:
+  gradient_accumulation_steps: 8
+  max_grad_norm: 1.0
+  delayed_sgd: true
+
+# 检查点平均（WMT18集成策略）
+checkpoint_averaging:
+  enabled: true
+  n_checkpoints: 5  # 平均最后5个检查点
+
+# 模型集成（WMT18核心策略）
+model_ensemble:
+  enabled: true
+  n_models: 4  # 集成4个模型
+  weights: null  # 等权重
+
+# 联合BPE配置（WMT18数据预处理）
+joint_bpe:
+  enabled: true
+  vocab_size: 50000  # WMT18推荐
+  min_frequency: 2
+  lowercase: false
+
+# 反向翻译数据增强（WMT18策略）
+back_translation:
+  enabled: true  # 启用反向翻译
+  synthetic_ratio: 0.5
+  min_confidence: 0.7
+  beam_size: 5
+  max_samples: 300000
+  # 单语数据路径
+  monolingual_en: "data/wmt/extracted/news_crawl_en.txt"
+  monolingual_zh: "data/wmt/extracted/news_crawl_zh.txt"
+
+# WMT评估数据配置
+wmt_evaluation:
+  enabled: true
+  # 主要验证集（translation2019zh验证集）
+  primary_test_set: "wmt-data/translation2019zh_valid.json"
+  # WMT测试集路径
+  data_dir: "data/wmt/extracted/wmt19_test"
+  test_sets:
+    - "wmt19_zh_en"
+    - "wmt19_en_zh"
+
+# 数据配置
+data:
+  # 原始数据路径
+  raw_data_path: "mydata/translation2019zh"
+  # 处理后数据输出路径
+  processed_data_path: "outputs/processed_data"
+  # 训练/验证/测试集比例
+  train_ratio: 0.90
+  val_ratio: 0.05
+  test_ratio: 0.05
+  # 数据筛选后目标数量（万条）
+  target_samples: 300  # 30万高质量样本
+  # 最小语义相似度阈值
+  min_similarity: 0.7
+  # 中英长度比例范围
+  length_ratio_min: 0.25  # 1:4
+  length_ratio_max: 0.5   # 1:2
+
+# 训练配置
+training:
+  # 训练轮数
+  num_epochs: 5
+  # 单批次大小
+  batch_size: 32
+  # 梯度累积步数（等效 batch_size = 32 * 8 = 256）
+  gradient_accumulation_steps: 8
+  # 学习率（微调推荐较小值，避免灾难性遗忘）
+  learning_rate: 2.0e-5
+  # 学习率预热步数（优化步数，考虑梯度累积）
+  # 实际batch数 = warmup_steps × gradient_accumulation_steps
+  warmup_steps: 100
+  # 权重衰减
+  weight_decay: 0.01
+  # 梯度裁剪
+  max_grad_norm: 1.0
+  # 保存检查点间隔（步数）
+  save_steps: 1000
+  # 评估间隔（步数）
+  eval_steps: 500
+  # 日志间隔（步数）
+  logging_steps: 100
+  # 激活检查点（节省显存）
+  gradient_checkpointing: true
+  # 随机种子
+  seed: 42
+
+# 课程学习配置
+curriculum:
+  # 是否启用课程学习
+  enabled: true
+  # 阶段划分
+  stages:
+    easy:
+      max_length: 30
+      min_confidence: 0.85
+      epoch_ratio: 0.3
+    medium:
+      max_length: 80
+      min_confidence: 0.7
+      epoch_ratio: 0.4
+    hard:
+      max_length: 512
+      min_confidence: 0.5
+      epoch_ratio: 0.3
+
+# 模型压缩配置
+compression:
+  # 剪枝配置
+  pruning:
+    # FFN 剪枝比例
+    ffn_prune_ratio: 0.7
+    # 注意力头剪枝比例
+    head_prune_ratio: 0.5
+    # 剪枝后微调轮数
+    finetune_epochs: 3
+  # 量化配置
+  quantization:
+    # 量化类型（int8 或 int4）
+    dtype: "int8"
+    # 校准样本数
+    calibration_samples: 500
+
+# 推理配置
+inference:
+  # 推理后端（pytorch）
+  backend: "pytorch"
+  # 批处理大小
+  batch_size: 8
+  # 最大延迟（毫秒）
+  max_delay_ms: 80
+  # Prompt Cache 大小（MB）
+  cache_size_mb: 512
+
+# 评估配置
+evaluation:
+  # 评估指标
+  metrics:
+    - sacrebleu
+    - comet
+    - bertscore
+    - chrf
+    - ter
+  # WMT 测试集路径
+  wmt_test_path: "models/wmt19-test"
+  # 领域测试集
+  domains:
+    - news
+    - patent
+    - subtitle
+    - spoken
+    - medical
+
+# 输出配置
+output:
+  # 检查点保存目录
+  checkpoint_dir: "outputs/checkpoints"
+  # 模型保存目录
+  model_dir: "outputs/models"
+  # 可视化输出目录
+  visualization_dir: "outputs/visualizations"
+  # 日志目录
+  log_dir: "outputs/logs"
